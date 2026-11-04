@@ -11,7 +11,7 @@ body{margin:0;font-family:Heebo,Arial,sans-serif;background:var(--sand);color:va
 
 /* דף פתיחה */
 body.open .top{position:absolute;inset-inline:0;background:none}
-.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:90px 8vw 60px;color:#f1ecd6;
+.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:200px 8vw 60px;color:#f1ecd6;
   background:linear-gradient(rgba(30,36,24,.25),rgba(30,36,24,.72)),url(media/background2.jpg) center/cover no-repeat,#4b5534}
 .hero h1{margin:0;font-size:clamp(2.6rem,9vw,5rem);font-weight:800;line-height:1.05}
 .hero p{margin:0;max-width:30rem;font-size:1.15rem}
