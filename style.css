@@ -11,7 +11,7 @@ body{margin:0;font-family:Heebo,Arial,sans-serif;background:var(--sand);color:va
 
 /* דף פתיחה */
 body.open .top{position:absolute;inset-inline:0;background:none}
-.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:180px 8vw 60px;color:#f1ecd6;
+.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:90px 8vw 60px;color:#f1ecd6;
   background:linear-gradient(rgba(30,36,24,.25),rgba(30,36,24,.72)),url(media/background2.jpg) center/cover no-repeat,#4b5534}
 .hero h1{margin:0;font-size:clamp(2.6rem,9vw,5rem);font-weight:800;line-height:1.05}
 .hero p{margin:0;max-width:30rem;font-size:1.15rem}
@@ -59,7 +59,7 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 @keyframes spin{0%{transform:rotate(0)}70%{transform:rotate(430deg)}82%{transform:rotate(398deg)}92%{transform:rotate(412deg)}100%{transform:rotate(408deg)}}
 
 /* מסלול מ-A ל-B */
-.route{position:absolute;z-index:1;inset-inline:0;bottom:10vh;bottom:10svh;width:100%;height:36%;pointer-events:none}
+.route{position:absolute;z-index:1;inset-inline:0;bottom:16vh;bottom:16svh;width:100%;height:36%;pointer-events:none}
 #rt{stroke-dashoffset:100;animation:draw 3.5s 2s ease-out forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .pin{opacity:0;animation:rise .6s both}
@@ -72,3 +72,7 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 @media(max-width:900px){.hero{justify-content:flex-start;padding-top:200px;padding-bottom:40px}}
 @media(max-width:600px){.compass{top:66px;inset-inline-end:5vw;width:100px}.route{bottom:20vh;bottom:20svh;height:24%}}
 @media(prefers-reduced-motion:reduce){.hero,.hero *{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}#rt{stroke-dashoffset:0}}
+
+/* קרדיט */
+.credit{text-align:center;font-size:.85rem;padding:14px;color:var(--olive);opacity:.85}
+.credit.open{position:absolute;inset-inline:0;bottom:0;z-index:3;color:#f1ecd6}
