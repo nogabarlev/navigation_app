@@ -11,7 +11,7 @@ body{margin:0;font-family:Heebo,Arial,sans-serif;background:var(--sand);color:va
 
 /* דף פתיחה */
 body.open .top{position:absolute;inset-inline:0;background:none}
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:90px 8vw 60px;color:#f1ecd6;
+.hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:90px 8vw 60px;color:#f1ecd6;
   background:linear-gradient(rgba(30,36,24,.25),rgba(30,36,24,.72)),url(media/background2.jpg) center/cover no-repeat,#4b5534}
 .hero h1{margin:0;font-size:clamp(2.6rem,9vw,5rem);font-weight:800;line-height:1.05}
 .hero p{margin:0;max-width:30rem;font-size:1.15rem}
@@ -46,7 +46,7 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 .hero>*:not(.route):not(.compass){position:relative;z-index:2}
 @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
 
-.kicker{margin:0;font-size:1.3rem;font-weight:700;color:#e0c98a;animation:rise .8s .2s both}
+.kicker{margin:0 0 -4px;font-size:clamp(1.9rem,6vw,2.8rem);font-weight:700;color:#e0c98a;animation:rise .8s .2s both}
 .hero h1 span{display:inline-block;animation:rise .9s both}
 .hero h1 span:nth-child(1){animation-delay:.5s}
 .hero h1 span:nth-child(2){animation-delay:.8s}
@@ -54,12 +54,12 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 .hero .btn{animation:rise .9s 1.6s both}
 
 /* מצפן */
-.compass{position:absolute;z-index:1;width:clamp(110px,16vw,190px);inset-inline-end:8vw;top:18vh;animation:rise 1s 1s both}
+.compass{position:absolute;z-index:1;width:clamp(110px,16vw,190px);inset-inline-end:8vw;top:9vh;animation:rise 1s 1s both}
 .needle{animation:spin 4.5s 1.2s cubic-bezier(.2,.8,.2,1) both;transform-origin:0 0}
 @keyframes spin{0%{transform:rotate(0)}70%{transform:rotate(430deg)}82%{transform:rotate(398deg)}92%{transform:rotate(412deg)}100%{transform:rotate(408deg)}}
 
 /* מסלול מ-A ל-B */
-.route{position:absolute;z-index:1;inset-inline:0;bottom:0;width:100%;height:42%;pointer-events:none}
+.route{position:absolute;z-index:1;inset-inline:0;bottom:7vh;bottom:7svh;width:100%;height:36%;pointer-events:none}
 #rt{stroke-dashoffset:100;animation:draw 3.5s 2s ease-out forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .pin{opacity:0;animation:rise .6s both}
@@ -69,5 +69,5 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 .walker{fill:#f6f2e2;opacity:0;offset-path:path("M120 340 C300 240 420 360 600 260 S900 180 1080 90");animation:walk 9s 6s linear infinite}
 @keyframes walk{0%{offset-distance:0;opacity:0}8%{opacity:1}92%{opacity:1}100%{offset-distance:100%;opacity:0}}
 
-@media(max-width:600px){.compass{top:80px;inset-inline-end:5vw;width:100px}.route{height:30%}.hero{padding-bottom:80px}}
+@media(max-width:600px){.compass{top:66px;inset-inline-end:5vw;width:100px}.route{bottom:9svh;height:26%}.hero{padding-bottom:150px}}
 @media(prefers-reduced-motion:reduce){.hero,.hero *{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}#rt{stroke-dashoffset:0}}
