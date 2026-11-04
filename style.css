@@ -104,3 +104,17 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 .sbtn{padding:.4rem .9rem}
 .opt.picked{border-color:var(--olive);background:#e4dfc0}
 .opt.picked.ok{background:#cfe0b4}
+
+/* ---------- הוסיפו לסוף style.css: שאלה 12 (טבלה + מחסן מילים) ---------- */
+.sorttbl{width:100%;border-collapse:separate;border-spacing:10px 0;table-layout:fixed;margin-bottom:12px}
+.sorttbl th{background:var(--olive);color:#f1ecd6;padding:8px;border-radius:10px 10px 0 0;font-size:1.05rem}
+.sorttbl td.drop{height:190px;vertical-align:top;padding:8px;border:2px solid var(--khaki);border-top:0;border-radius:0 0 10px 10px;background:#fffc;cursor:pointer}
+.sorttbl td.drop.armed{border-color:var(--sky);box-shadow:0 0 0 3px #6fa3ad66}
+.bankwrap{margin-top:6px}
+.banktitle{font-weight:700;margin-bottom:6px}
+.bank{display:flex;flex-wrap:wrap;gap:8px;min-height:60px;padding:10px;border:2px dashed var(--khaki);border-radius:10px;background:#fff8}
+.chip{padding:.5rem .8rem;border:2px solid var(--khaki);background:#fff;border-radius:999px;font:inherit;cursor:grab;text-align:center}
+.sorttbl .chip{display:block;width:100%;margin-bottom:8px;border-radius:10px}
+.chip.sel{border-color:var(--sky);box-shadow:0 0 0 3px #6fa3ad66}
+.chip.ok{background:#cfe0b4;border-color:#5d7a2f;cursor:default}
+.chip.no{background:#efc9bf;border-color:var(--brick);cursor:default}
