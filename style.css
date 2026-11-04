@@ -76,3 +76,31 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 /* קרדיט */
 .credit{text-align:center;font-size:.85rem;padding:14px;color:var(--olive);opacity:.85}
 .credit.open{position:absolute;inset-inline:0;bottom:0;z-index:3;color:#f1ecd6}
+
+
+/* ---------- הוסיפו לסוף style.css ---------- */
+.fb{white-space:pre-line}
+.q-img img{width:100%;max-height:320px;object-fit:contain;border-radius:8px;display:block;margin-bottom:12px;background:#fff}
+.ph{border:2px dashed var(--khaki);border-radius:8px;padding:34px 12px;text-align:center;color:var(--olive);background:#fffa;margin-bottom:12px;font-size:.9rem;direction:ltr}
+.ph.small{padding:16px 6px;margin:0;font-size:.75rem}
+
+/* התאמה עם קווים */
+.m-wrap{display:block}
+.match{position:relative;display:grid;grid-template-columns:1fr 1fr;column-gap:72px;margin-bottom:6px}
+.mcol{display:flex;flex-direction:column;gap:10px;justify-content:center}
+.mlines{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:visible}
+.mitem{padding:.7rem;border:2px solid var(--khaki);background:#fffc;border-radius:10px;font:inherit;cursor:pointer;text-align:center;min-height:48px;display:flex;align-items:center;justify-content:center}
+.mitem img{width:100%;max-height:90px;object-fit:contain;display:block;margin:0}
+.mitem .q-img{width:100%}
+.mitem.sel{border-color:var(--sky);box-shadow:0 0 0 3px #6fa3ad66}
+.mitem.linked{background:#fff;border-color:var(--olive)}
+.mitem.ok{background:#cfe0b4;border-color:#5d7a2f}
+.mitem.no{background:#efc9bf;border-color:var(--brick)}
+#qCheck:disabled{opacity:.5;cursor:default}
+
+/* יתרון / חסרון */
+.srow{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.stext{flex:1 1 12rem}
+.sbtn{padding:.4rem .9rem}
+.opt.picked{border-color:var(--olive);background:#e4dfc0}
+.opt.picked.ok{background:#cfe0b4}
