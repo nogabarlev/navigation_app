@@ -59,7 +59,7 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 @keyframes spin{0%{transform:rotate(0)}70%{transform:rotate(430deg)}82%{transform:rotate(398deg)}92%{transform:rotate(412deg)}100%{transform:rotate(408deg)}}
 
 /* מסלול מ-A ל-B */
-.route{position:absolute;z-index:1;inset-inline:0;bottom:12vh;bottom:12svh;width:100%;height:36%;pointer-events:none}
+.route{position:absolute;z-index:1;inset-inline:0;bottom:10vh;bottom:10svh;width:100%;height:36%;pointer-events:none}
 #rt{stroke-dashoffset:100;animation:draw 3.5s 2s ease-out forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 .pin{opacity:0;animation:rise .6s both}
