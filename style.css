@@ -118,3 +118,82 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 .chip.sel{border-color:var(--sky);box-shadow:0 0 0 3px #6fa3ad66}
 .chip.ok{background:#cfe0b4;border-color:#5d7a2f;cursor:default}
 .chip.no{background:#efc9bf;border-color:var(--brick);cursor:default}
+
+
+/* ===== עיצוב חדש לשאלות – הוסיפו לסוף style.css ===== */
+body{overflow-x:hidden}
+
+#quiz{position:relative;padding:18px 18px 22px;border:0;border-radius:20px;box-shadow:0 10px 28px rgba(38,44,31,.16);
+  background-color:var(--card);
+  background-image:
+    repeating-radial-gradient(circle at 105% -10%,transparent 0 22px,rgba(140,138,90,.14) 22px 23px),
+    repeating-radial-gradient(circle at -8% 112%,transparent 0 26px,rgba(111,163,173,.16) 26px 27px)}
+#quiz.enter{animation:cardIn .45s ease both}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+
+/* שורת מצב */
+.hud{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.steps{display:flex;gap:5px}
+.steps span{flex:1;height:8px;border-radius:99px;background:rgba(140,138,90,.28);transition:background .3s,transform .3s}
+.steps span.cur{background:var(--sky);transform:scaleY(1.5);animation:pulse 1.4s infinite}
+.steps span.ok{background:#5d7a2f;animation:none}
+.steps span.no{background:var(--brick);animation:none}
+@keyframes pulse{50%{opacity:.55}}
+.stats{display:flex;gap:8px;align-items:center}
+.stat{background:var(--olive);color:#f1ecd6;border-radius:99px;padding:.15rem .85rem;font-weight:700;font-size:.9rem}
+.stat.bump{animation:bump .5s}
+@keyframes bump{40%{transform:scale(1.3)}100%{transform:scale(1)}}
+.sndbtn{margin-inline-start:auto;border:0;background:rgba(255,255,255,.7);border-radius:99px;width:36px;height:36px;cursor:pointer;font-size:1rem}
+
+/* שאלה ותמונה */
+#qText{font-size:1.4rem;font-weight:800;line-height:1.35;margin-bottom:14px}
+#qImg .q-img img{border:3px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+
+/* תשובות עם אות */
+.opts>.opt{display:flex;align-items:center;gap:10px;font-size:1.02rem;font-weight:600;transition:transform .15s,box-shadow .15s,border-color .15s,background .2s;box-shadow:0 2px 0 rgba(38,44,31,.12)}
+.opts>.opt::before{content:attr(data-letter);flex:none;width:30px;height:30px;border-radius:50%;background:var(--olive);color:#f1ecd6;display:grid;place-items:center;font-weight:800;transition:background .2s}
+.opts>.opt:not(:disabled):hover{transform:translateY(-3px);box-shadow:0 8px 16px rgba(38,44,31,.16);border-color:var(--olive)}
+.opts>.opt:not(:disabled):active{transform:scale(.97)}
+.opts>.opt.ok::before{content:'✓';background:#5d7a2f}
+.opts>.opt.no::before{content:'✗';background:var(--brick)}
+.opt.ok{animation:pop .5s}
+.opt.no{animation:shk .4s}
+.mitem.ok{animation:pop .5s}
+.chip.ok{animation:pop .5s}
+@keyframes pop{40%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes shk{20%{transform:translateX(-6px)}50%{transform:translateX(6px)}80%{transform:translateX(-3px)}}
+
+/* כניסה מדורגת */
+.opts>*,.mitem{animation:ent .45s both}
+.opts>*:nth-child(2){animation-delay:.07s}.opts>*:nth-child(3){animation-delay:.14s}.opts>*:nth-child(4){animation-delay:.21s}
+.mitem:nth-child(2){animation-delay:.05s}.mitem:nth-child(3){animation-delay:.1s}.mitem:nth-child(4){animation-delay:.15s}
+.mitem:nth-child(5){animation-delay:.2s}.mitem:nth-child(6){animation-delay:.25s}
+@keyframes ent{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.mitem{transition:transform .15s,box-shadow .15s,border-color .15s,background .2s}
+.mitem:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(38,44,31,.15)}
+
+/* משוב */
+.fb{font-weight:600;animation:fbIn .35s both}
+.fb.good{background:#eaf4d8}
+.fb.bad{background:#fbe9e4}
+@keyframes fbIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* כפתורים */
+#qNext,#qCheck{font-size:1.05rem;padding:.8rem 2rem;box-shadow:0 4px 0 #7f3322;transition:transform .1s,box-shadow .1s}
+#qNext:active,#qCheck:active{transform:translateY(3px);box-shadow:0 1px 0 #7f3322}
+
+/* הודעה צפה וקונפטי */
+.toast{position:absolute;top:-16px;left:50%;transform:translateX(-50%);z-index:30;padding:.45rem 1.2rem;border-radius:99px;font-weight:800;color:#fff;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);animation:toast 1.6s both;pointer-events:none;white-space:nowrap}
+.toast.good{background:#5d7a2f}
+.toast.bad{background:var(--brick)}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,10px) scale(.7)}15%{opacity:1;transform:translate(-50%,0) scale(1.08)}25%{transform:translate(-50%,0) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-14px)}}
+.cf{position:absolute;z-index:25;width:9px;height:14px;border-radius:2px;pointer-events:none;animation:cf 1.1s ease-out forwards}
+@keyframes cf{0%{transform:translate(0,0) rotate(0);opacity:1}35%{transform:translate(var(--dx),var(--dy)) rotate(calc(var(--rot)*.5))}100%{transform:translate(calc(var(--dx)*1.25),calc(var(--dy) + 340px)) rotate(var(--rot));opacity:0}}
+#quiz.glow{animation:glow .8s}
+@keyframes glow{0%{box-shadow:0 0 0 0 rgba(93,122,47,.6)}100%{box-shadow:0 0 0 24px rgba(93,122,47,0)}}
+#quiz.shake{animation:qshake .5s}
+@keyframes qshake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+
+@media(max-width:520px){#qText{font-size:1.2rem}}
+@media(prefers-reduced-motion:reduce){.cf,.toast,#quiz,.opts>*,.mitem,.fb,.opt,.steps span{animation:none!important}}
