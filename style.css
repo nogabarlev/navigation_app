@@ -197,3 +197,19 @@ body{overflow-x:hidden}
 
 @media(max-width:520px){#qText{font-size:1.2rem}}
 @media(prefers-reduced-motion:reduce){.cf,.toast,#quiz,.opts>*,.mitem,.fb,.opt,.steps span{animation:none!important}}
+
+/* ---------- הוסיפו לסוף style.css: שאלה 12 מותאמת לטלפון ----------
+   (אפשר למחוק את הבלוק הישן של .sorttbl מ-sort-table.css, הוא כבר לא בשימוש) */
+.sortwrap{display:flex;flex-direction:column;gap:12px}
+.sorthint{margin:0;font-size:.9rem;color:var(--olive)}
+.sortgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scol{display:flex;flex-direction:column;border-radius:12px;cursor:pointer;min-width:0}
+.scolh{background:var(--olive);color:#f1ecd6;padding:8px;border-radius:12px 12px 0 0;text-align:center;font-weight:800;font-size:1.05rem}
+.scol .drop{min-height:190px;padding:8px;border:2px solid var(--khaki);border-top:0;border-radius:0 0 12px 12px;background:#fffc;display:flex;flex-direction:column;gap:8px;transition:border-color .15s,box-shadow .15s}
+.scol .drop:empty::before{content:'לחצו כאן להנחת המילה';color:var(--khaki);font-size:.85rem;text-align:center;margin:auto;padding:8px}
+.scol.armed .drop{border-color:var(--sky);box-shadow:0 0 0 3px #6fa3ad66;background:#f2fafb}
+.scol.armed .scolh{background:var(--sky)}
+.sortgrid .chip{display:block;width:100%;border-radius:10px;font-size:.92rem;padding:.55rem .6rem;overflow-wrap:anywhere}
+.bankwrap{margin-top:0}
+.bank{min-height:64px}
+@media(max-width:600px){.bankwrap{order:-1}}
