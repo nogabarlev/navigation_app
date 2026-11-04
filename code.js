@@ -243,32 +243,39 @@ const $ = id => document.getElementById(id);
     };
   }
 
-  /* ---------- טבלת יתרונות / חסרונות + מחסן מילים ---------- */
+  /* ---------- טבלת יתרונות / חסרונות + מחסן מילים (מותאם לטלפון) ---------- */
   function renderSort(q) {
     var opts = $('opts'); opts.className = 'm-wrap';
     var items = shuffle(q.items);
     var place = items.map(function () { return null; });   // null = במחסן, 0 = יתרונות, 1 = חסרונות
     var sel = null, done = false;
+    var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
 
-    var tbl = h('table', 'sorttbl');
-    var thead = h('thead'), trh = h('tr');
-    trh.appendChild(h('th', null, 'יתרונות'));
-    trh.appendChild(h('th', null, 'חסרונות'));
-    thead.appendChild(trh); tbl.appendChild(thead);
-    var tb = h('tbody'), tr = h('tr');
-    var cells = [h('td', 'drop'), h('td', 'drop')];
-    cells.forEach(function (c) { tr.appendChild(c); });
-    tb.appendChild(tr); tbl.appendChild(tb);
+    var wrap = h('div', 'sortwrap');
+    wrap.appendChild(h('p', 'sorthint', 'לחצו על מילה מהמחסן ואז על העמודה הנכונה (במחשב אפשר גם לגרור). לחיצה על מילה שבטבלה מחזירה אותה למחסן.'));
+
+    var grid = h('div', 'sortgrid');
+    var cols = [], zones = [];
+    ['יתרונות', 'חסרונות'].forEach(function (name, col) {
+      var c = h('div', 'scol');
+      c.appendChild(h('div', 'scolh', name));
+      var z = h('div', 'drop');
+      c.appendChild(z);
+      grid.appendChild(c); cols.push(c); zones.push(z);
+    });
 
     var bankWrap = h('div', 'bankwrap');
     bankWrap.appendChild(h('div', 'banktitle', 'מחסן מילים'));
     var bank = h('div', 'bank');
     bankWrap.appendChild(bank);
-    opts.appendChild(tbl); opts.appendChild(bankWrap);
+
+    wrap.appendChild(grid); wrap.appendChild(bankWrap);
+    opts.appendChild(wrap);
 
     var chips = items.map(function (it, i) {
       var c = h('button', 'chip', it.t);
-      c.draggable = true;
+      c.type = 'button';
+      c.draggable = !touch;
       c.onclick = function () {
         if (done) return;
         if (place[i] !== null) { place[i] = null; sel = null; }   // החזרה למחסן
@@ -287,8 +294,11 @@ const $ = id => document.getElementById(id);
       if (done || sel === null) return;
       place[sel] = col; sel = null; refresh();
     }
-    cells.forEach(function (c, col) {
-      c.onclick = function (e) { if (e.target === c) put(col); };
+    cols.forEach(function (c, col) {
+      c.onclick = function (e) {
+        if (e.target.closest && e.target.closest('.chip')) return;
+        put(col);
+      };
       c.ondragover = function (e) { e.preventDefault(); };
       c.ondrop = function (e) { e.preventDefault(); put(col); };
     });
@@ -296,11 +306,12 @@ const $ = id => document.getElementById(id);
     bank.ondrop = function (e) { e.preventDefault(); put(null); };
 
     function refresh() {
-      cells.forEach(function (c) { c.innerHTML = ''; c.classList.toggle('armed', sel !== null && !done); });
+      zones.forEach(function (z) { z.innerHTML = ''; });
+      cols.forEach(function (c) { c.classList.toggle('armed', sel !== null && !done); });
       bank.innerHTML = '';
       chips.forEach(function (c, i) {
         c.classList.toggle('sel', sel === i);
-        (place[i] === null ? bank : cells[place[i]]).appendChild(c);
+        (place[i] === null ? bank : zones[place[i]]).appendChild(c);
       });
       checkBtn.disabled = place.some(function (p) { return p === null; });
       checkBtn.classList.remove('hidden');
@@ -318,7 +329,7 @@ const $ = id => document.getElementById(id);
         chips[i].draggable = false;
         if (!ok) wrong.push(it.t + ' – ' + (it.a === 0 ? 'יתרון' : 'חסרון'));
       });
-      cells.forEach(function (c) { c.classList.remove('armed'); });
+      cols.forEach(function (c) { c.classList.remove('armed'); });
       var ok = !wrong.length;
       showFb(ok, ok ? 'נכון! כל הפרטים במקום הנכון.' : 'יש טעויות (באדום). המיקום הנכון:\n' + wrong.join('\n'));
     };
