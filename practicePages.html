@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>לומדת ניווטים – תרגול</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><img src="media/logo.png" alt=""><b>לומדת ניווטים</b><span id="prog"></span></header>
+<main class="wrap">
+
+  <section id="quiz" class="card">
+    <h2 id="qText"></h2>
+    <div id="qImg"></div>
+    <div id="opts" class="opts"></div>
+    <div id="fb" class="fb hidden"></div>
+    <button id="qNext" class="btn hidden">המשך</button>
+  </section>
+
+  <section id="practice" class="hidden">
+    <div class="card">
+      <h2>תרגול: מה הזווית מנקודה A לנקודה B?</h2>
+      <p id="step"></p>
+    </div>
+    <svg id="map" viewBox="0 0 600 600" aria-label="מפת תרגול"></svg>
+    <div class="card row">
+      <label>הזווית (במעלות): <input id="ans" type="number" min="0" max="360" inputmode="numeric"></label>
+      <button id="check" class="btn">בדיקה</button>
+      <label class="small"><input id="live" type="checkbox"> הצג לי את הקריאה</label>
+      <b id="hintOut"></b>
+    </div>
+    <div id="pfb" class="fb hidden"></div>
+    <button id="pNext" class="btn hidden">הסיבוב הבא</button>
+  </section>
+
+  <section id="end" class="card hidden">
+    <h2>סיימתם!</h2>
+    <p id="summary"></p>
+    <a class="btn" href="openPage.html">חזרה להתחלה</a>
+  </section>
+
+</main>
+<script src="code.js"></script>
+</body>
+</html>

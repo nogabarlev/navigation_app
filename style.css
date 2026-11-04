@@ -1,0 +1,73 @@
+:root{--olive:#4b5534;--sand:#e9e3cc;--ink:#262c1f;--khaki:#8c8a5a;--brick:#a8442f;--sky:#6fa3ad;--card:#f6f2e2}
+*{box-sizing:border-box}
+body{margin:0;font-family:Heebo,Arial,sans-serif;background:var(--sand);color:var(--ink);line-height:1.5}
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.hidden{display:none!important}
+
+/* כותרת עליונה + לוגו */
+.top{display:flex;align-items:center;gap:12px;padding:8px 14px;background:var(--olive);color:#f1ecd6;position:sticky;top:0;z-index:5}
+.top img{height:46px;width:auto}
+.top span{margin-inline-start:auto;font-size:.9rem;opacity:.9}
+
+/* דף פתיחה */
+body.open .top{position:absolute;inset-inline:0;background:none}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:90px 8vw 60px;color:#f1ecd6;
+  background:linear-gradient(rgba(30,36,24,.25),rgba(30,36,24,.72)),url(media/background2.jpg) center/cover no-repeat,#4b5534}
+.hero h1{margin:0;font-size:clamp(2.6rem,9vw,5rem);font-weight:800;line-height:1.05}
+.hero p{margin:0;max-width:30rem;font-size:1.15rem}
+
+.btn{background:var(--brick);color:#fff;padding:.7rem 1.8rem;border:0;border-radius:10px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{filter:brightness(1.08)}
+
+.wrap{max-width:760px;margin:0 auto;padding:14px}
+.card{background:var(--card);border:1px solid #cfc7a6;border-radius:12px;padding:16px;margin-bottom:14px}
+h2{margin:0 0 10px;font-size:1.25rem}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.small{font-size:.9rem}
+
+/* שאלות */
+#qImg svg,#qImg img{width:100%;max-height:260px;border-radius:8px;display:block;margin-bottom:12px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{padding:.8rem;border:2px solid var(--khaki);background:#fffc;border-radius:10px;font:inherit;cursor:pointer;text-align:start}
+.opt:disabled{cursor:default}
+.opt.ok{background:#cfe0b4;border-color:#5d7a2f}
+.opt.no{background:#efc9bf;border-color:var(--brick)}
+.fb{margin:12px 0;padding:12px;border-radius:10px;background:#fff;border-inline-start:6px solid var(--khaki)}
+.fb.good{border-color:#5d7a2f}.fb.bad{border-color:var(--brick)}
+
+/* מפת תרגול */
+#map{width:100%;max-height:72vh;touch-action:none;border-radius:10px;border:2px solid var(--olive);background:#ddd6b3;display:block;margin-bottom:14px;user-select:none}
+input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;border:2px solid var(--khaki)}
+
+@media(max-width:520px){.opts{grid-template-columns:1fr}.hero{padding-inline:6vw}}
+
+/* ---------- אנימציות דף הפתיחה ---------- */
+.hero{position:relative;overflow:hidden}
+.hero>*:not(.route):not(.compass){position:relative;z-index:2}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+.kicker{margin:0;font-size:1.3rem;font-weight:700;color:#e0c98a;animation:rise .8s .2s both}
+.hero h1 span{display:inline-block;animation:rise .9s both}
+.hero h1 span:nth-child(1){animation-delay:.5s}
+.hero h1 span:nth-child(2){animation-delay:.8s}
+.lead{animation:rise .9s 1.2s both}
+.hero .btn{animation:rise .9s 1.6s both}
+
+/* מצפן */
+.compass{position:absolute;z-index:1;width:clamp(110px,16vw,190px);inset-inline-end:8vw;top:18vh;animation:rise 1s 1s both}
+.needle{animation:spin 4.5s 1.2s cubic-bezier(.2,.8,.2,1) both;transform-origin:0 0}
+@keyframes spin{0%{transform:rotate(0)}70%{transform:rotate(430deg)}82%{transform:rotate(398deg)}92%{transform:rotate(412deg)}100%{transform:rotate(408deg)}}
+
+/* מסלול מ-A ל-B */
+.route{position:absolute;z-index:1;inset-inline:0;bottom:0;width:100%;height:42%;pointer-events:none}
+#rt{stroke-dashoffset:100;animation:draw 3.5s 2s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pin{opacity:0;animation:rise .6s both}
+.pin circle{fill:#c4553d;stroke:#f6f2e2;stroke-width:2}
+.pin text{fill:#f6f2e2;font-size:26px;font-weight:800}
+.pin.a{animation-delay:2s}.pin.b{animation-delay:5.4s}
+.walker{fill:#f6f2e2;opacity:0;offset-path:path("M120 340 C300 240 420 360 600 260 S900 180 1080 90");animation:walk 9s 6s linear infinite}
+@keyframes walk{0%{offset-distance:0;opacity:0}8%{opacity:1}92%{opacity:1}100%{offset-distance:100%;opacity:0}}
+
+@media(max-width:600px){.compass{top:80px;inset-inline-end:5vw;width:100px}.route{height:30%}.hero{padding-bottom:80px}}
+@media(prefers-reduced-motion:reduce){.hero,.hero *{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}#rt{stroke-dashoffset:0}}
