@@ -7,7 +7,7 @@ const $ = id => document.getElementById(id);
   var logo = document.querySelector('.top img');
   if (logo && !logo.closest('a')) {
     var a = document.createElement('a');
-    a.href = 'index.html';
+    a.href = 'openPage.html';
     a.className = 'logo-link';
     a.setAttribute('aria-label', 'חזרה לעמוד הפתיחה');
     logo.parentNode.insertBefore(a, logo);
