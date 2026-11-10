@@ -678,44 +678,102 @@ $('pNext').onclick = () => {
   showEnd();
 };
 
-/* ---------- מסך סיום ---------- */
+function endIconSvg(name) {
+    const icons = {
+        trophy: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v3a4 4 0 0 0 4 4M17 6h3v3a4 4 0 0 1-4 4"/>',
+
+        compass: '<circle cx="12" cy="12" r="9"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5L16 8Z"/>',
+
+        map: '<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/>',
+
+        tent: '<path d="m3 20 9-16 9 16H3Z"/><path d="m12 4 2 16M8 20l4-7 4 7"/>',
+
+        clipboard: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 10h6M9 14h6M9 18h3"/>',
+
+        target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+
+        star: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/>',
+
+        flame: '<path d="M12 22a7 7 0 0 0 7-7c0-4-3-6-5-10-1 3-3 4-3 7-2-1-3-3-3-5-2 3-3 5-3 8a7 7 0 0 0 7 7Z"/><path d="M12 22a3 3 0 0 0 3-3c0-2-2-3-3-5-1 2-3 3-3 5a3 3 0 0 0 3 3Z"/>'
+    };
+
+    return `
+        <svg class="ei ${name}"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.8"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             aria-hidden="true">
+            ${icons[name]}
+        </svg>
+    `;
+}
+
+
 function showEnd() {
-  const qs = window.quizScore || 0, qt = window.quizTotal || 12;
-  const pts = window.quizPoints || 0, best = window.quizBest || 0;
-  const pct = Math.round((qs + pScore) / (qt + ROUNDS) * 100);
-  const ranks = [
-    [90, '🏆', 'מצוין! אתם נווטים אלופים', 'שליטה מרשימה בחומר. מוכנים לשטח!'],
-    [70, '🧭', 'כל הכבוד! אתם בדרך הנכונה', 'עוד קצת דיוק ואתם שם.'],
-    [50, '🗺️', 'התחלה טובה', 'שווה לחזור על הנושאים שטעיתם בהם.'],
-    [0,  '⛺', 'כדאי לעבור שוב על החומר', 'אין בעיה, נסו שוב ותשתפרו מהר.']
-  ];
-  const r = ranks.find(x => pct >= x[0]);
-  $('endMedal').textContent = r[1];
-  $('endTitle').textContent = r[2];
-  $('endSub').textContent = r[3];
+    const qs = window.quizScore || 0;
+    const qt = window.quizTotal || 12;
+    const pts = window.quizPoints || 0;
+    const best = window.quizBest || 0;
 
-  const cards = [
-    ['📋', qs, 'מתוך ' + qt + ' שאלות'],
-    ['🎯', pScore, 'מתוך ' + ROUNDS + ' תרגולים'],
-    ['⭐', pts, 'נקודות'],
-    ['🔥', best, 'רצף שיא']
-  ];
-  const grid = $('endGrid'); grid.innerHTML = '';
-  cards.forEach((c, i) => {
-    const d = document.createElement('div');
-    d.className = 'stat-card'; d.style.setProperty('--d', (0.3 + i * 0.15) + 's');
-    d.innerHTML = `<div class="e">${c[0]}</div><div class="v">0</div><div class="l">${c[2]}</div>`;
-    grid.appendChild(d);
-    countUp(d.querySelector('.v'), c[1], 1200);
-  });
+    const pct = Math.round((qs + pScore) / (qt + ROUNDS) * 100);
 
-  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const fg = $('ringFg');
-  fg.style.strokeDashoffset = 327;
-  setTimeout(() => { fg.style.strokeDashoffset = 327 * (1 - pct / 100); }, 80);
-  countUp($('ringNum'), pct, 1400);
+    const ranks = [
+        [90, 'trophy', 'מצוין! אתם נווטים אלופים', 'שליטה מרשימה בחומר. מוכנים לשטח!'],
+        [70, 'compass', 'כל הכבוד! אתם בדרך הנכונה', 'עוד קצת דיוק ואתם שם.'],
+        [50, 'map', 'התחלה טובה', 'שווה לחזור על הנושאים שטעיתם בהם.'],
+        [0, 'tent', 'כדאי לעבור שוב על החומר', 'אין בעיה, נסו שוב ותשתפרו מהר.']
+    ];
 
-  if (pct >= 50 && !reduce) setTimeout(() => burst(pct >= 90 ? 70 : 40), 400);
+    const r = ranks.find(x => pct >= x[0]);
+
+    $('endMedal').innerHTML = endIconSvg(r[1]);
+    $('endTitle').textContent = r[2];
+    $('endSub').textContent = r[3];
+
+    const cards = [
+        ['clipboard', qs, 'מתוך ' + qt + ' שאלות'],
+        ['target', pScore, 'מתוך ' + ROUNDS + ' תרגולים'],
+        ['star', pts, 'נקודות'],
+        ['flame', best, 'רצף שיא']
+    ];
+
+    const grid = $('endGrid');
+    grid.innerHTML = '';
+
+    cards.forEach((c, i) => {
+        const d = document.createElement('div');
+
+        d.className = 'stat-card';
+        d.style.setProperty('--d', (0.3 + i * 0.15) + 's');
+
+        d.innerHTML = `
+            <div class="e">${endIconSvg(c[0])}</div>
+            <div class="v">0</div>
+            <div class="l">${c[2]}</div>
+        `;
+
+        grid.appendChild(d);
+        countUp(d.querySelector('.v'), c[1], 1200);
+    });
+
+    const reduce = window.matchMedia &&
+        matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const fg = $('ringFg');
+    fg.style.strokeDashoffset = 327;
+
+    setTimeout(() => {
+        fg.style.strokeDashoffset = 327 * (1 - pct / 100);
+    }, 80);
+
+    countUp($('ringNum'), pct, 1400);
+
+    if (pct >= 50 && !reduce) {
+        setTimeout(() => burst(pct >= 90 ? 70 : 40), 400);
+    }
 }
 
 function countUp(el, to, ms) {
