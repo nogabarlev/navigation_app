@@ -217,30 +217,54 @@ body{overflow-x:hidden}
 
 .logo-link{display:inline-flex}
 .logo-link img{display:block}
-.btn.ghost{background:transparent;color:var(--olive,#5d7a2f);border:2px solid currentColor}
-.navrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 
+/* ---------- כפתורי ניווט בשאלות ---------- */
+.navrow{display:flex;gap:12px;align-items:center;margin-top:24px}
+#qBack,#qNext,#qCheck{
+  min-width:132px;padding:.8rem 1.6rem;font-size:1.05rem;text-align:center;border:0;
+}
+/* "הקודמת" – בצד ימין (תחילת השורה ב-RTL), בצבע זית */
+#qBack{background:var(--olive);color:#f1ecd6;box-shadow:0 4px 0 #2f3620}
+#qBack:active{transform:translateY(3px);box-shadow:0 1px 0 #2f3620}
+/* "בדיקה" / "המשך" – תמיד בצד שמאל, בצבע לבנה */
+#qNext,#qCheck{margin-inline-start:auto}
+
+.btn.ghost{background:transparent;color:var(--olive,#5d7a2f);border:2px solid currentColor}
+
+/* ---------- מסך סיום ---------- */
 .end{position:relative;text-align:center;overflow:hidden}
-.medal{font-size:68px;display:inline-block;cursor:pointer;user-select:none;
+.medal{width:96px;height:96px;margin:0 auto 6px;border-radius:50%;background:var(--olive);color:#e0c98a;
+  display:grid;place-items:center;cursor:pointer;user-select:none;
+  box-shadow:0 6px 16px rgba(38,44,31,.25);
   animation:medalPop .8s cubic-bezier(.2,1.6,.4,1) both}
+.medal .ei{width:46px;height:46px;display:block}
 .medal.wiggle{animation:wiggle .6s ease}
 @keyframes medalPop{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
 @keyframes wiggle{25%{transform:rotate(-14deg) scale(1.15)}60%{transform:rotate(12deg) scale(1.15)}100%{transform:none}}
 .end-sub{opacity:.8;margin:.2rem 0 0}
+
 .ring{position:relative;width:160px;height:160px;margin:14px auto}
-.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg);display:block}
 .ring .bg{fill:none;stroke:rgba(0,0,0,.1);stroke-width:10}
 .ring .fg{fill:none;stroke:var(--olive,#5d7a2f);stroke-width:10;stroke-linecap:round;
   stroke-dasharray:327;stroke-dashoffset:327;transition:stroke-dashoffset 1.5s cubic-bezier(.2,.8,.2,1)}
 .ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:2rem;direction:ltr}
+
 .end-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
-.stat-card{background:rgba(255,255,255,.55);border-radius:14px;padding:12px 8px;
-  opacity:0;animation:rise .5s ease forwards;animation-delay:var(--d,0s)}
-.stat-card .e{font-size:1.6rem}
+.stat-card{background:rgba(255,255,255,.55);border-radius:14px;padding:14px 8px;
+  opacity:0;animation:endRise .5s ease forwards;animation-delay:var(--d,0s)}
+.stat-card .e{display:grid;place-items:center;margin-bottom:4px}
+.stat-card .ei{width:28px;height:28px;display:block}
+.stat-card .ei.clipboard{color:var(--olive)}
+.stat-card .ei.target{color:var(--brick)}
+.stat-card .ei.star{color:#c28a2c}
+.stat-card .ei.flame{color:#ff8a3d}
 .stat-card .v{font-size:1.5rem;font-weight:800;direction:ltr}
 .stat-card .l{font-size:.85rem;opacity:.75}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes endRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
 .end-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .ecf{position:absolute;width:9px;height:14px;border-radius:2px;pointer-events:none;
   animation:ecf 1.3s ease-out forwards}
 @keyframes ecf{to{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:0}}
+@media(prefers-reduced-motion:reduce){.medal,.stat-card,.ecf{animation:none!important;opacity:1}}
