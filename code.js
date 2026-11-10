@@ -1,6 +1,21 @@
 const $ = id => document.getElementById(id);
 
 /* =====================================================
+   לוגו -> חזרה לעמוד הפתיחה (גיבוי למקרה שה-HTML לא עודכן)
+   ===================================================== */
+(function () {
+  var logo = document.querySelector('.top img');
+  if (logo && !logo.closest('a')) {
+    var a = document.createElement('a');
+    a.href = 'openPage.html';
+    a.className = 'logo-link';
+    a.setAttribute('aria-label', 'חזרה לעמוד הפתיחה');
+    logo.parentNode.insertBefore(a, logo);
+    a.appendChild(logo);
+  }
+})();
+
+/* =====================================================
    לומדת ניווטים – חלק א: 12 שאלות
    תמונות: שמרו בתיקיית media בשמות שמופיעים בשדות img.
    כל עוד תמונה לא קיימת, יוצג מקום מסומן בקו מקווקו.
@@ -91,6 +106,7 @@ const $ = id => document.getElementById(id);
 
   /* ---------------- מצב ---------------- */
   var idx = 0, score = 0, checkFn = null, redraw = null;
+  var results = [], saved = [];
   var COLORS = ['#6fa3ad', '#a8442f', '#8c8a5a', '#4b5534', '#c28a2c', '#7a5c8f', '#3f7f5a', '#b5651d'];
 
   var checkBtn = $('qCheck');
@@ -99,63 +115,74 @@ const $ = id => document.getElementById(id);
     checkBtn.id = 'qCheck';
     $('qNext').parentNode.insertBefore(checkBtn, $('qNext'));
   }
+  var backBtn = $('qBack');
+  if (!backBtn) {
+    backBtn = h('button', 'btn ghost hidden', 'הקודמת');
+    backBtn.id = 'qBack';
+    $('qNext').parentNode.insertBefore(backBtn, $('qNext').parentNode.firstChild);
+  }
   checkBtn.onclick = function () { if (checkFn) checkFn(); };
   $('qNext').onclick = function () { idx++; render(); };
+  backBtn.onclick = function () { if (idx > 0) { idx--; render(); } };
   window.addEventListener('resize', function () { if (redraw) redraw(); });
 
-  function showFb(ok, msg) {
+  function showFb(ok, msg, state, replay) {
     var fb = $('fb');
     fb.className = 'fb ' + (ok ? 'good' : 'bad');
+    if (replay) fb.setAttribute('data-replay', '1');
     fb.textContent = msg;
     checkBtn.classList.add('hidden');
     var nx = $('qNext');
     nx.textContent = idx === Q.length - 1 ? 'סיום' : 'המשך';
     nx.classList.remove('hidden');
-    if (ok) score++;
+    if (!replay) { results[idx] = ok; saved[idx] = { ok: ok, msg: msg, state: state }; }
   }
 
   function render() {
     if (idx >= Q.length) return finish();
-    var q = Q[idx];
+    var q = Q[idx], sv = saved[idx];
     checkFn = null; redraw = null;
     $('prog').textContent = 'שאלה ' + (idx + 1) + ' מתוך ' + Q.length;
     $('qText').textContent = (idx + 1) + ') ' + q.t;
     var qi = $('qImg'); qi.innerHTML = '';
     if (q.img) qi.appendChild(image(q.img, 'תמונה לשאלה ' + (idx + 1)));
     var opts = $('opts'); opts.innerHTML = ''; opts.className = 'opts';
-    $('fb').className = 'fb hidden';
+    var fb = $('fb'); fb.className = 'fb hidden'; fb.removeAttribute('data-replay');
     $('qNext').classList.add('hidden');
+    backBtn.classList.toggle('hidden', idx === 0);
     checkBtn.classList.add('hidden');
-    if (q.type === 'mc') renderMC(q);
-    else if (q.type === 'match') renderMatch(q);
-    else renderSort(q);
+    if (q.type === 'mc') renderMC(q, sv);
+    else if (q.type === 'match') renderMatch(q, sv);
+    else renderSort(q, sv);
   }
 
   /* ---------- בחירה מרובה ---------- */
-  function renderMC(q) {
+  function renderMC(q, sv) {
     var btns = [];
+    function answer(i, replay) {
+      btns.forEach(function (x) { x.disabled = true; });
+      var ok = i === q.ans;
+      btns[i].classList.add(ok ? 'ok' : 'no');
+      if (!ok) btns[q.ans].classList.add('ok');
+      var msg = ok ? 'נכון! ' : 'לא נכון. התשובה הנכונה: ' + q.opts[q.ans] + '\n';
+      if (!ok && q.explain) msg += '\n' + q.explain;
+      showFb(ok, msg.trim(), { i: i }, replay);
+    }
     q.opts.forEach(function (txt, i) {
       var b = h('button', 'opt', txt);
       if (q.ltr) { b.dir = 'ltr'; b.style.textAlign = 'center'; }
-      b.onclick = function () {
-        btns.forEach(function (x) { x.disabled = true; });
-        var ok = i === q.ans;
-        b.classList.add(ok ? 'ok' : 'no');
-        if (!ok) btns[q.ans].classList.add('ok');
-        var msg = ok ? 'נכון! ' : 'לא נכון. התשובה הנכונה: ' + q.opts[q.ans] + '\n';
-        if (!ok && q.explain) msg += '\n' + q.explain;
-        showFb(ok, msg.trim());
-      };
+      b.onclick = function () { answer(i, false); };
       btns.push(b);
       $('opts').appendChild(b);
     });
+    if (sv) answer(sv.state.i, true);
   }
 
   /* ---------- התאמה עם קווים ---------- */
-  function renderMatch(q) {
+  function renderMatch(q, sv) {
     var opts = $('opts'); opts.className = 'm-wrap';
     var n = q.pairs.length;
-    var rOrder = shuffle(q.pairs.map(function (_, i) { return i; }));
+    var rOrder = sv ? sv.state.rOrder : shuffle(q.pairs.map(function (_, i) { return i; }));
     var wrap = h('div', 'match');
     var colL = h('div', 'mcol'), colR = h('div', 'mcol');
     var svg = document.createElementNS(NS, 'svg');
@@ -164,6 +191,7 @@ const $ = id => document.getElementById(id);
     opts.appendChild(wrap);
 
     var L = [], R = [], links = {}, sel = null, done = false, result = {};
+    if (sv) Object.keys(sv.state.links).forEach(function (k) { links[k] = sv.state.links[k]; });
 
     q.pairs.forEach(function (p, i) {
       var b = h('button', 'mitem');
@@ -224,12 +252,12 @@ const $ = id => document.getElementById(id);
       checkBtn.disabled = Object.keys(links).length < n;
       checkBtn.classList.remove('hidden');
     }
-    refresh();
 
-    checkFn = function () {
+    function grade(replay) {
       if (Object.keys(links).length < n) return;
       done = true;
-      var wrong = [];
+      var wrong = [], snap = {};
+      Object.keys(links).forEach(function (k) { snap[k] = links[k]; });
       for (var i = 0; i < n; i++) {
         result[i] = rOrder[links[i]] === i;
         L[i].classList.add(result[i] ? 'ok' : 'no');
@@ -239,15 +267,20 @@ const $ = id => document.getElementById(id);
       draw();
       var ok = wrong.length === 0;
       showFb(ok, ok ? 'נכון! כל ההתאמות מדויקות.'
-                    : 'יש טעויות (באדום). ההתאמות הנכונות של הפריטים השגויים:\n' + wrong.join('\n'));
-    };
+                    : 'יש טעויות (באדום). ההתאמות הנכונות של הפריטים השגויים:\n' + wrong.join('\n'),
+             { rOrder: rOrder, links: snap }, replay);
+    }
+
+    refresh();
+    checkFn = function () { grade(false); };
+    if (sv) grade(true);
   }
 
   /* ---------- טבלת יתרונות / חסרונות + מחסן מילים (מותאם לטלפון) ---------- */
-  function renderSort(q) {
+  function renderSort(q, sv) {
     var opts = $('opts'); opts.className = 'm-wrap';
-    var items = shuffle(q.items);
-    var place = items.map(function () { return null; });   // null = במחסן, 0 = יתרונות, 1 = חסרונות
+    var items = sv ? sv.state.items : shuffle(q.items);
+    var place = sv ? sv.state.place.slice() : items.map(function () { return null; });   // null = במחסן, 0 = יתרונות, 1 = חסרונות
     var sel = null, done = false;
     var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
 
@@ -316,9 +349,8 @@ const $ = id => document.getElementById(id);
       checkBtn.disabled = place.some(function (p) { return p === null; });
       checkBtn.classList.remove('hidden');
     }
-    refresh();
 
-    checkFn = function () {
+    function grade(replay) {
       if (place.some(function (p) { return p === null; })) return;
       done = true;
       var wrong = [];
@@ -331,12 +363,18 @@ const $ = id => document.getElementById(id);
       });
       cols.forEach(function (c) { c.classList.remove('armed'); });
       var ok = !wrong.length;
-      showFb(ok, ok ? 'נכון! כל הפרטים במקום הנכון.' : 'יש טעויות (באדום). המיקום הנכון:\n' + wrong.join('\n'));
-    };
+      showFb(ok, ok ? 'נכון! כל הפרטים במקום הנכון.' : 'יש טעויות (באדום). המיקום הנכון:\n' + wrong.join('\n'),
+             { items: items, place: place.slice() }, replay);
+    }
+
+    refresh();
+    checkFn = function () { grade(false); };
+    if (sv) grade(true);
   }
 
   /* ---------- סיום החלק הראשון ---------- */
   function finish() {
+    score = results.filter(Boolean).length;
     window.quizScore = score; window.quizTotal = Q.length;
     if (typeof window.onQuizDone === 'function') return window.onQuizDone(score, Q.length);
     $('quiz').classList.add('hidden');
@@ -348,8 +386,7 @@ const $ = id => document.getElementById(id);
 })();
 
 /* =====================================================
-   אפקטים ואייקונים לשאלות (היה בקובץ effects.js – אפשר למחוק אותו
-   ואת icons.css מה-HTML; העיצוב של האייקונים מוזרק מכאן)
+   אפקטים ואייקונים לשאלות
    ===================================================== */
 (function () {
   'use strict';
@@ -368,8 +405,7 @@ const $ = id => document.getElementById(id);
     '.sndbtn{display:inline-grid;place-items:center;color:var(--olive);padding:0}' +
     '.sndbtn .ic{width:20px;height:20px}' +
     '.toast{display:inline-flex;align-items:center;gap:.45rem}' +
-    '.toast .ic{width:1.2em;height:1.2em}' +
-    '.endstats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px}';
+    '.toast .ic{width:1.2em;height:1.2em}';
   document.head.appendChild(st);
 
   function el(tag, cls, txt) {
@@ -430,7 +466,7 @@ const $ = id => document.getElementById(id);
   }
   function updateStats() {
     sStreak.num.textContent = streak; sPts.num.textContent = pts;
-    window.quizPoints = pts;
+    window.quizPoints = pts; window.quizBest = best;
   }
 
   /* ---------- צלילים קצרים ---------- */
@@ -442,7 +478,6 @@ const $ = id => document.getElementById(id);
     } catch (e) {}
     return ac;
   }
-  /* מפעיל את האודיו בלחיצה הראשונה בכל מקום בדף */
   ['pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
     document.addEventListener(ev, getAC, { once: true, passive: true });
   });
@@ -532,32 +567,16 @@ const $ = id => document.getElementById(id);
   new MutationObserver(onNewQuestion)
     .observe(qText, { childList: true, characterData: true, subtree: true });
   new MutationObserver(function () {
-    if (handled) return;
+    if (handled || fb.hasAttribute('data-replay')) return;
     if (fb.classList.contains('good')) { handled = true; good(); }
     else if (fb.classList.contains('bad')) { handled = true; bad(); }
   }).observe(fb, { attributes: true, attributeFilter: ['class'] });
-
-  /* ---------- מסך סיום: מוסיף נקודות ורצף שיא ---------- */
-  var end = $('end'), summary = $('summary'), added = false;
-  if (end && summary) {
-    new MutationObserver(function () {
-      if (!end.classList.contains('hidden') && !added) {
-        added = true;
-        var box = el('div', 'endstats');
-        var a = el('span', 'stat'), b = el('span', 'stat');
-        a.appendChild(icon('star')); a.appendChild(el('span', null, pts + ' נקודות'));
-        b.appendChild(icon('flame')); b.appendChild(el('span', null, 'רצף שיא: ' + best));
-        box.appendChild(a); box.appendChild(b);
-        summary.appendChild(box);
-      }
-    }).observe(end, { attributes: true, attributeFilter: ['class'] });
-  }
 
   onNewQuestion();
 })();
 
 /* =====================================================
-   חלק ב: תרגול – מד קואורדינטות (ללא שינוי)
+   חלק ב: תרגול – מד קואורדינטות + מסך סיום
    ===================================================== */
 const R = 130, TOL = 5, ROUNDS = 5, NS = 'http://www.w3.org/2000/svg';
 const map = $('map');
@@ -656,8 +675,86 @@ $('check').onclick = () => {
 $('pNext').onclick = () => {
   if (++rnd < ROUNDS) return startRound();
   $('practice').classList.add('hidden'); $('end').classList.remove('hidden'); $('prog').textContent = '';
-  $('summary').textContent = `שאלות: ${window.quizScore} מתוך ${window.quizTotal}. תרגול: ${pScore} מתוך ${ROUNDS}.`;
+  showEnd();
 };
+
+/* ---------- מסך סיום ---------- */
+function showEnd() {
+  const qs = window.quizScore || 0, qt = window.quizTotal || 12;
+  const pts = window.quizPoints || 0, best = window.quizBest || 0;
+  const pct = Math.round((qs + pScore) / (qt + ROUNDS) * 100);
+  const ranks = [
+    [90, '🏆', 'מצוין! אתם נווטים אלופים', 'שליטה מרשימה בחומר. מוכנים לשטח!'],
+    [70, '🧭', 'כל הכבוד! אתם בדרך הנכונה', 'עוד קצת דיוק ואתם שם.'],
+    [50, '🗺️', 'התחלה טובה', 'שווה לחזור על הנושאים שטעיתם בהם.'],
+    [0,  '⛺', 'כדאי לעבור שוב על החומר', 'אין בעיה, נסו שוב ותשתפרו מהר.']
+  ];
+  const r = ranks.find(x => pct >= x[0]);
+  $('endMedal').textContent = r[1];
+  $('endTitle').textContent = r[2];
+  $('endSub').textContent = r[3];
+
+  const cards = [
+    ['📋', qs, 'מתוך ' + qt + ' שאלות'],
+    ['🎯', pScore, 'מתוך ' + ROUNDS + ' תרגולים'],
+    ['⭐', pts, 'נקודות'],
+    ['🔥', best, 'רצף שיא']
+  ];
+  const grid = $('endGrid'); grid.innerHTML = '';
+  cards.forEach((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'stat-card'; d.style.setProperty('--d', (0.3 + i * 0.15) + 's');
+    d.innerHTML = `<div class="e">${c[0]}</div><div class="v">0</div><div class="l">${c[2]}</div>`;
+    grid.appendChild(d);
+    countUp(d.querySelector('.v'), c[1], 1200);
+  });
+
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fg = $('ringFg');
+  fg.style.strokeDashoffset = 327;
+  setTimeout(() => { fg.style.strokeDashoffset = 327 * (1 - pct / 100); }, 80);
+  countUp($('ringNum'), pct, 1400);
+
+  if (pct >= 50 && !reduce) setTimeout(() => burst(pct >= 90 ? 70 : 40), 400);
+}
+
+function countUp(el, to, ms) {
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !to) { el.textContent = to; return; }
+  const t0 = performance.now();
+  (function f(t) {
+    const p = Math.min(1, (t - t0) / ms);
+    el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+    if (p < 1) requestAnimationFrame(f);
+  })(t0);
+}
+
+function burst(n) {
+  const end = $('end'), m = $('endMedal');
+  const cols = ['#a8442f', '#6fa3ad', '#e0c98a', '#5d7a2f', '#8c8a5a', '#c28a2c'];
+  for (let i = 0; i < n; i++) {
+    const c = document.createElement('i');
+    c.className = 'ecf';
+    c.style.left = (m.offsetLeft + m.offsetWidth / 2) + 'px';
+    c.style.top = (m.offsetTop + m.offsetHeight / 2) + 'px';
+    c.style.background = cols[i % cols.length];
+    c.style.setProperty('--dx', ((Math.random() - 0.5) * 420) + 'px');
+    c.style.setProperty('--dy', (-120 + Math.random() * 380) + 'px');
+    c.style.setProperty('--rot', ((Math.random() - 0.5) * 900) + 'deg');
+    c.addEventListener('animationend', () => c.remove());
+    end.appendChild(c);
+  }
+}
+const celebrate = () => {
+  const m = $('endMedal');
+  m.classList.remove('wiggle'); void m.offsetWidth; m.classList.add('wiggle');
+  burst(36);
+};
+if ($('endMedal')) {
+  $('endMedal').onclick = celebrate;
+  $('endMedal').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') celebrate(); };
+}
+if ($('again')) $('again').onclick = () => location.reload();
 
 /* מעבר מהשאלות לתרגול */
 window.onQuizDone = () => {
