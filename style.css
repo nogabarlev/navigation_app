@@ -248,7 +248,17 @@ body{overflow-x:hidden}
 .ring .bg{fill:none;stroke:rgba(0,0,0,.1);stroke-width:10}
 .ring .fg{fill:none;stroke:var(--olive,#5d7a2f);stroke-width:10;stroke-linecap:round;
   stroke-dasharray:327;stroke-dashoffset:327;transition:stroke-dashoffset 1.5s cubic-bezier(.2,.8,.2,1)}
-.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:2rem;direction:ltr}
+.ring b {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 2rem;
+    line-height: 1;
+    direction: ltr;
+}
 
 .end-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
 .stat-card{background:rgba(255,255,255,.55);border-radius:14px;padding:14px 8px;
