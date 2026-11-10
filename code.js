@@ -59,7 +59,7 @@ const $ = id => document.getElementById(id);
       opts: ['שלוחה', 'נחל', 'כיפה', 'אוכף'], ans: 2 },
     { t: 'מי אני? יש לי 3 כיווני ירידה וכיוון עלייה 1.', type: 'mc',
       opts: ['כיפה', 'אוכף', 'נחל', 'שלוחה'], ans: 3 },
-    { t: 'איזו צורה טופוגרפית מסומנת בעיגול האדום?', type: 'mc', img: 'media/q8.jpg',
+    { t: 'איזו צורה טופוגרפית מסומנת בחצים הירוקים והאדומים בין הקו הכחול?', type: 'mc', img: 'media/q8.jpg',
       opts: ['אוכף', 'נחל', 'כיפה', 'שלוחה'], ans: 0 },
     { t: 'התאימו בין הסימון לבין המשמעות (לחצו על סימון ואז על המשמעות):', type: 'match',
       pairs: [
@@ -435,19 +435,32 @@ const $ = id => document.getElementById(id);
 
   /* ---------- צלילים קצרים ---------- */
   var ac;
+  function getAC() {
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === 'suspended') ac.resume();
+    } catch (e) {}
+    return ac;
+  }
+  /* מפעיל את האודיו בלחיצה הראשונה בכל מקום בדף */
+  ['pointerdown', 'touchstart', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, getAC, { once: true, passive: true });
+  });
+
   function beep(freqs) {
     if (!sndOn) return;
     try {
-      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-      var t = ac.currentTime;
+      var ctx = getAC();
+      if (!ctx) return;
+      var t = ctx.currentTime;
       freqs.forEach(function (f, i) {
-        var o = ac.createOscillator(), g = ac.createGain(), st = t + i * 0.1;
+        var o = ctx.createOscillator(), g = ctx.createGain(), at = t + i * 0.1;
         o.type = 'sine'; o.frequency.value = f;
-        g.gain.setValueAtTime(0.0001, st);
-        g.gain.exponentialRampToValueAtTime(0.16, st + 0.02);
-        g.gain.exponentialRampToValueAtTime(0.0001, st + 0.26);
-        o.connect(g); g.connect(ac.destination);
-        o.start(st); o.stop(st + 0.3);
+        g.gain.setValueAtTime(0.0001, at);
+        g.gain.exponentialRampToValueAtTime(0.16, at + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, at + 0.26);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(at); o.stop(at + 0.3);
       });
     } catch (e) {}
   }
