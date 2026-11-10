@@ -5,13 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>לומדת ניווטים – תרגול</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;800&display=swap">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 <header class="top">
-  <a href="index.html" class="logo-link" aria-label="חזרה לעמוד הפתיחה"><img src="media/logo.png" alt="לוגו שבטה"></a>
+  <a href="openPage.html" class="logo-link" aria-label="חזרה לעמוד הפתיחה"><img src="media/logo.png" alt="לוגו שבטה"></a>
   <b>לומדת ניווטים</b><span id="prog"></span>
-</header><main class="wrap">
+</header>
+
+<main class="wrap">
 
   <section id="quiz" class="card">
     <h2 id="qText"></h2>
@@ -19,10 +21,10 @@
     <div id="opts" class="opts"></div>
     <div id="fb" class="fb hidden"></div>
     <div class="navrow">
-    <button id="qBack" class="btn ghost hidden">הקודמת</button>
-    <button id="qCheck" class="btn hidden">בדיקה</button>
-    <button id="qNext" class="btn hidden">המשך</button>
-</div>
+      <button id="qBack" class="btn hidden">הקודמת</button>
+      <button id="qCheck" class="btn hidden">בדיקה</button>
+      <button id="qNext" class="btn hidden">המשך</button>
+    </div>
   </section>
 
   <section id="practice" class="hidden">
@@ -41,22 +43,25 @@
     <button id="pNext" class="btn hidden">הסיבוב הבא</button>
   </section>
 
-<section id="end" class="card end hidden">
-  <div id="endMedal" class="medal" role="button" tabindex="0" aria-label="חגיגה">🏅</div>
-  <h2 id="endTitle">סיימתם!</h2>
-  <p id="endSub" class="end-sub"></p>
-  <div class="ring">
-    <svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle id="ringFg" class="fg" cx="60" cy="60" r="52"/></svg>
-    <b><span id="ringNum">0</span>%</b>
-  </div>
-  <div id="endGrid" class="end-grid"></div>
-  <div class="end-actions">
-    <button id="again" class="btn ghost">נסו שוב</button>
-    <a class="btn" href="index.html">חזרה להתחלה</a>
-  </div>
-</section>
+  <section id="end" class="card end hidden">
+    <div id="endMedal" class="medal" role="button" tabindex="0" aria-label="חגיגה"></div>
+    <h2 id="endTitle">סיימתם!</h2>
+    <p id="endSub" class="end-sub"></p>
+    <div class="ring">
+      <svg width="160" height="160" viewBox="0 0 120 120">
+        <circle class="bg" cx="60" cy="60" r="52" fill="none" stroke="rgba(0,0,0,.1)" stroke-width="10"/>
+        <circle id="ringFg" class="fg" cx="60" cy="60" r="52" fill="none" stroke="#4b5534" stroke-width="10" stroke-linecap="round" stroke-dasharray="327" stroke-dashoffset="327"/>
+      </svg>
+      <b><span id="ringNum">0</span>%</b>
+    </div>
+    <div id="endGrid" class="end-grid"></div>
+    <div class="end-actions">
+      <button id="again" class="btn ghost">נסו שוב</button>
+      <a class="btn" href="openPage.html">חזרה להתחלה</a>
+    </div>
+  </section>
 
 </main>
 <script src="code.js"></script>
 </body>
-</html>
+</html> 
