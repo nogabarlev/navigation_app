@@ -697,7 +697,11 @@ function endIconSvg(name) {
     flame: '<path d="M12 22a7 7 0 0 0 7-7c0-4-3-6-5-10-1 3-3 4-3 7-2-1-3-3-3-5-2 3-3 5-3 8a7 7 0 0 0 7 7Z"/><path d="M12 22a3 3 0 0 0 3-3c0-2-2-3-3-5-1 2-3 3-3 5a3 3 0 0 0 3 3Z"/>'
   };
 
-  return '<svg class="ei ei-' + name + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+  // צבעים קבועים לאייקוני כרטיסי הסטטיסטיקה (inline, כדי שלא יהיו תלויים ב-CSS)
+  const colors = { clipboard: '#4b5534', target: '#a8442f', star: '#c28a2c', flame: '#ff8a3d' };
+  const colorAttr = colors[name] ? ' style="color:' + colors[name] + '"' : '';
+
+  return '<svg class="ei ei-' + name + '"' + colorAttr + ' viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
          'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
          icons[name] + '</svg>';
 }
