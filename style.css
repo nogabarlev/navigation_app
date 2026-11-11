@@ -53,7 +53,7 @@ input[type=number]{width:5.5rem;font:inherit;padding:.45rem;border-radius:8px;bo
 .lead{animation:rise .9s 1.2s both}
 .hero .btn{animation:rise .9s 1.6s both}
 
-/* מצפן */
+/* מצפן (עמוד הפתיחה בלבד) */
 .compass{position:absolute;z-index:1;width:clamp(110px,16vw,190px);inset-inline-end:8vw;top:9vh;animation:rise 1s 1s both}
 .needle{animation:spin 4.5s 1.2s cubic-bezier(.2,.8,.2,1) both;transform-origin:0 0}
 @keyframes spin{0%{transform:rotate(0)}70%{transform:rotate(430deg)}82%{transform:rotate(398deg)}92%{transform:rotate(412deg)}100%{transform:rotate(408deg)}}
@@ -233,11 +233,13 @@ body{overflow-x:hidden}
 
 /* ---------- מסך סיום ---------- */
 .end{position:relative;text-align:center;overflow:hidden}
+
+/* העיגול הירוק – האייקון ממורכז בדיוק */
 .medal{width:96px;height:96px;margin:0 auto 6px;border-radius:50%;background:var(--olive);color:#e0c98a;
-  display:grid;place-items:center;cursor:pointer;user-select:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;
   box-shadow:0 6px 16px rgba(38,44,31,.25);
   animation:medalPop .8s cubic-bezier(.2,1.6,.4,1) both}
-.medal .ei{width:46px;height:46px;display:block}
+.medal .ei{position:static;width:46px;height:46px;flex:none;display:block;margin:0;animation:none;transform:none}
 .medal.wiggle{animation:wiggle .6s ease}
 @keyframes medalPop{from{transform:scale(0) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
 @keyframes wiggle{25%{transform:rotate(-14deg) scale(1.15)}60%{transform:rotate(12deg) scale(1.15)}100%{transform:none}}
@@ -264,11 +266,11 @@ body{overflow-x:hidden}
 .stat-card{background:rgba(255,255,255,.55);border-radius:14px;padding:14px 8px;
   opacity:0;animation:endRise .5s ease forwards;animation-delay:var(--d,0s)}
 .stat-card .e{display:grid;place-items:center;margin-bottom:4px}
-.stat-card .ei{width:28px;height:28px;display:block}
-.stat-card .ei.clipboard{color:var(--olive)}
-.stat-card .ei.target{color:var(--brick)}
-.stat-card .ei.star{color:#c28a2c}
-.stat-card .ei.flame{color:#ff8a3d}
+.stat-card .ei{position:static;width:28px;height:28px;display:block;animation:none}
+.stat-card .ei-clipboard{color:var(--olive)}
+.stat-card .ei-target{color:var(--brick)}
+.stat-card .ei-star{color:#c28a2c}
+.stat-card .ei-flame{color:#ff8a3d}
 .stat-card .v{font-size:1.5rem;font-weight:800;direction:ltr}
 .stat-card .l{font-size:.85rem;opacity:.75}
 @keyframes endRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
