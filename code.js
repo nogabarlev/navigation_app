@@ -290,7 +290,7 @@ const $ = id => document.getElementById(id);
     var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
 
     var wrap = h('div', 'sortwrap');
-    wrap.appendChild(h('p', 'sorthint', 'לחצו על היגד מהמחסן ואז על העמודה הנכונה (במחשב אפשר גם לגרור). לחיצה על היגד שבטבלה מחזירה אותו למחסן.'));
+    wrap.appendChild(h('p', 'sorthint', 'לחצו על היגד מהמחסן ואז על הכותרת של העמודה הנכונה (במחשב אפשר גם לגרור). לחיצה על היגד שבטבלה מחזירה אותו למחסן.'));
 
     var grid = h('div', 'sortgrid');
     var cols = [], zones = [];
