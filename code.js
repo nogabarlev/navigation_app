@@ -79,10 +79,9 @@ const $ = id => document.getElementById(id);
     { t: 'התאימו בין הסימון לבין המשמעות (לחצו על סימון ואז על המשמעות):', type: 'match',
       pairs: [
         { img: 'media/sign-1.jpg', l: 'סימון 1', r: 'נקודת ציון (נ.צ.)' },
-        { img: 'media/sign-2.jpg', l: 'סימון 2', r: 'נקודת התחלה (נ.ה.)' },
-        { img: 'media/sign-3.jpg', l: 'סימון 3', r: 'נקודת סוף (נ.ס.)' },
-        { img: 'media/sign-4.jpg', l: 'סימון 4', r: 'נקודת ביניים (נ.ב.)' },
-        { img: 'media/sign-5.jpg', l: 'סימון 5', r: 'מעבר חובה (מ.ח.)' }
+        { img: 'media/sign-2.jpg', l: 'סימון 2', r: 'נקודת התחלה (נ.ה.) ונקודת סוף (נ.ס.)' },
+        { img: 'media/sign-4.jpg', l: 'סימון 3', r: 'נקודת ביניים (נ.ב.)' },
+        { img: 'media/sign-5.jpg', l: 'סימון 4', r: 'מעבר חובה (מ.ח.)' }
       ] },
     { t: 'מהו אזימוט?', type: 'mc',
       opts: ['הזווית הנוצרת בין הדרום לבין הנקודה אליה אנו מסתכלים.',
@@ -96,11 +95,17 @@ const $ = id => document.getElementById(id);
         { l: 'גרמניה', r: 'יציאה מהנ.ב. לכיוון הנ.ס.' },
         { l: 'תאילנד', r: 'הגעה לנ.ס.' }
       ] },
-    { t: 'השלימו את הטבלה – יתרונות וחסרונות בניתוח תצ״א. גררו (או לחצו על מילה ואז על העמודה) כל פרט מהמחסן אל העמודה הנכונה:', type: 'sort',
+    { t: 'התאימו כל היגד למפה המתאימה לו. גררו (או לחצו על היגד ואז על העמודה) כל היגד מהמחסן אל העמודה הנכונה:', type: 'sort',
+      cols: ['מפה טופוגרפית', 'מפת תצ״א'],
       items: [
-        { t: 'תכסית ברורה ועדכנית', a: 0 }, { t: 'ירידה לפרטים הקטנים ואפיונם', a: 0 }, { t: 'גוונים', a: 0 },
-        { t: 'אין הפרשי גבהים', a: 1 }, { t: 'קשה לקרוא טופוגרפיה', a: 1 },
-        { t: 'פרטים זמניים', a: 1 }, { t: 'לא נוחה לשימוש בשטח נרחב', a: 1 }
+        { t: 'ניתן לזהות בה אזורים שבהם פני השטח תלולים במיוחד', a: 0 },
+        { t: 'היא מאפשרת להבין את מבנה התבליט של האזור', a: 0 },
+        { t: 'ניתן להיעזר בה כדי להבין את כיוון זרימת הנחלים', a: 0 },
+        { t: 'היא אינה מציגה בהכרח את המראה האמיתי של השטח בצבעיו הטבעיים', a: 0 },
+        { t: 'מאפשרת ירידה לפרטים הקטנים ואפיונם', a: 1 },
+        { t: 'תכסית ברורה ועדכנית', a: 1 },
+        { t: 'לא נוחה לשימוש בשטח נרחב', a: 1 },
+        { t: 'מאפשרת להבחין בין גוונים', a: 1 }
       ] }
   ];
 
@@ -276,20 +281,20 @@ const $ = id => document.getElementById(id);
     if (sv) grade(true);
   }
 
-  /* ---------- טבלת יתרונות / חסרונות + מחסן מילים (מותאם לטלפון) ---------- */
+  /* ---------- התאמת היגדים לעמודות + מחסן היגדים (מותאם לטלפון) ---------- */
   function renderSort(q, sv) {
     var opts = $('opts'); opts.className = 'm-wrap';
     var items = sv ? sv.state.items : shuffle(q.items);
-    var place = sv ? sv.state.place.slice() : items.map(function () { return null; });   // null = במחסן, 0 = יתרונות, 1 = חסרונות
+    var place = sv ? sv.state.place.slice() : items.map(function () { return null; });   // null = במחסן, 0/1 = העמודות
     var sel = null, done = false;
     var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
 
     var wrap = h('div', 'sortwrap');
-    wrap.appendChild(h('p', 'sorthint', 'לחצו על מילה מהמחסן ואז על העמודה הנכונה (במחשב אפשר גם לגרור). לחיצה על מילה שבטבלה מחזירה אותה למחסן.'));
+    wrap.appendChild(h('p', 'sorthint', 'לחצו על היגד מהמחסן ואז על העמודה הנכונה (במחשב אפשר גם לגרור). לחיצה על היגד שבטבלה מחזירה אותו למחסן.'));
 
     var grid = h('div', 'sortgrid');
     var cols = [], zones = [];
-    ['יתרונות', 'חסרונות'].forEach(function (name, col) {
+    q.cols.forEach(function (name, col) {
       var c = h('div', 'scol');
       c.appendChild(h('div', 'scolh', name));
       var z = h('div', 'drop');
@@ -298,7 +303,7 @@ const $ = id => document.getElementById(id);
     });
 
     var bankWrap = h('div', 'bankwrap');
-    bankWrap.appendChild(h('div', 'banktitle', 'מחסן מילים'));
+    bankWrap.appendChild(h('div', 'banktitle', 'מחסן היגדים'));
     var bank = h('div', 'bank');
     bankWrap.appendChild(bank);
 
@@ -359,11 +364,11 @@ const $ = id => document.getElementById(id);
         chips[i].classList.remove('sel');
         chips[i].classList.add(ok ? 'ok' : 'no');
         chips[i].draggable = false;
-        if (!ok) wrong.push(it.t + ' – ' + (it.a === 0 ? 'יתרון' : 'חסרון'));
+        if (!ok) wrong.push(it.t + ' – ' + q.cols[it.a]);
       });
       cols.forEach(function (c) { c.classList.remove('armed'); });
       var ok = !wrong.length;
-      showFb(ok, ok ? 'נכון! כל הפרטים במקום הנכון.' : 'יש טעויות (באדום). המיקום הנכון:\n' + wrong.join('\n'),
+      showFb(ok, ok ? 'נכון! כל ההיגדים במקום הנכון.' : 'יש טעויות (באדום). המיקום הנכון:\n' + wrong.join('\n'),
              { items: items, place: place.slice() }, replay);
     }
 
@@ -665,11 +670,11 @@ $('check').onclick = () => {
   const truth = azim(A, B), val = parseFloat($('ans').value);
   if (Math.hypot(g.x - A.x, g.y - A.y) > 14) return say('מרכז המד צריך להיות בדיוק על נקודה A. גררו אותו שוב.', false);
   if (!s || diff(azim(g, s), truth) > 4) return say('החוט צריך לעבור דרך נקודה B. מתחו אותו שוב.', false);
-  if (isNaN(val)) return say('הקלידו את הזווית שקראתם על המד.', false);
+  if (isNaN(val)) return say('הקלידו את האזימוט שקראתם על המד.', false);
   done = true; $('check').classList.add('hidden');
   const ok = diff(val, truth) <= TOL;
   if (ok) pScore++;
-  say(ok ? `נכון! הזווית מ-A ל-B היא בערך ${Math.round(truth)}°.` : `הקריאה לא מדויקת. הזווית הנכונה היא כ-${Math.round(truth)}°. שימו לב לשנתות: כל שנתה קטנה היא 5°, והארוכה יותר 10°.`, ok);
+  say(ok ? `נכון! האזימוט מ-A ל-B הוא בערך ${Math.round(truth)}°.` : `הקריאה לא מדויקת. האזימוט הנכון הוא כ-${Math.round(truth)}°. שימו לב לשנתות: כל שנתה קטנה היא 5°, והארוכה יותר 10°.`, ok);
   $('pNext').classList.remove('hidden');
 };
 $('pNext').onclick = () => {
